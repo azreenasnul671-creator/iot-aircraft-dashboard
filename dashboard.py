@@ -160,4 +160,4 @@ figcount = px.bar(
 )
 st.plotly_chart(figcount)
 
-st.write("Dashboard generated as part of IoT Aircraft Monitoring Project.")
+
