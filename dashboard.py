@@ -5,7 +5,6 @@ import plotly.express as px
 import os
 
 DATA_FILE = os.path.join(os.path.dirname(__file__), "flight_data.csv")
-df = pd.read_csv(DATA_FILE)
 
 # Configuration: set your Excel filename and optional sheet
 EXCEL_FILE = "flight_data.csv"  # adjust if your file has a different name
@@ -50,7 +49,6 @@ st.write(df.head())
 
 # If loading failed or file is empty, show a helpful message and stop
 if df is None or df.empty:
-    st.title("Aircraft Monitoring Dashboard – Perak, Malaysia")
     st.info("Waiting for data. Please ensure flight_data.xlsx exists with the expected structure.")
     st.stop()
 
@@ -113,7 +111,7 @@ df = df[df['altitude'] >= altitude_filter]
 
 from datetime import datetime
 
-st.sidebar.markdown("##Master Clock")
+st.sidebar.markdown("Master Clock")
 
 clock = datetime.now().strftime("%d %B %Y | %H:%M:%S")
 st.sidebar.write(clock)
