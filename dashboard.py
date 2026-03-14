@@ -62,7 +62,6 @@ df['altitude'] = pd.to_numeric(df['altitude'], errors='coerce')
 required_cols = ['timestamp', 'latitude', 'longitude', 'callsign', 'icao24', 'altitude']
 missing = [c for c in required_cols if c not in df.columns]
 if missing:
-    st.title("Aircraft Monitoring Dashboard – Perak, Malaysia")
     st.error(f"Missing required columns in Excel file: {', '.join(missing)}")
     st.info("Please adjust your Excel file or the harmonization mapping.")
     st.stop()
