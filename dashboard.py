@@ -45,7 +45,6 @@ def harmonize_columns(df):
 
 # Load data
 df = load_csv(DATA_FILE)
-st.write(df.head())
 
 # If loading failed or file is empty, show a helpful message and stop
 if df is None or df.empty:
@@ -76,7 +75,6 @@ df['timestamp'] = pd.to_datetime(df['timestamp'], dayfirst=True, errors='coerce'
 # Drop rows with missing critical fields to avoid downstream errors
 df = df.dropna(subset=['timestamp', 'latitude', 'longitude', 'callsign', 'icao24'])
 
-st.title("Aircraft Monitoring Dashboard – Perak, Malaysia")
 st.title("Aircraft Monitoring Dashboard – Perak, Malaysia")
 
 st.subheader("📊 Flight Statistics")
