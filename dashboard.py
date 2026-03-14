@@ -90,28 +90,42 @@ selectedflight = st.sidebar.selectbox(
 )
 
 # SECTION 1: FLIGHT MAP
-st.subheader("Flight Map Over Perak")
+st.subheader("Live Aircraft Map – Perak")
 
 mapdata = df.dropna(subset=['latitude','longitude'])
 
+icon_data = {
+    "url": "https://cdn-icons-png.flaticon.com/512/34/34627.png",
+    "width": 128,
+    "height": 128,
+    "anchorY": 128
+}
+
+mapdata["icon"] = None
+for i in mapdata.index:
+    mapdata.at[i, "icon"] = icon_data
+
 layer = pdk.Layer(
-    "ScatterplotLayer",
+    "IconLayer",
     data=mapdata,
-    get_position='[longitude, latitude]',
-    get_radius=2000,
-    get_fill_color=[255, 0, 0],
+    get_icon="icon",
+    get_size=4,
+    size_scale=15,
+    get_position="[longitude, latitude]",
     pickable=True
 )
 
 view_state = pdk.ViewState(
     latitude=4.0,
     longitude=101.0,
-    zoom=7
+    zoom=7,
+    pitch=45
 )
 
 st.pydeck_chart(pdk.Deck(
     layers=[layer],
-    initial_view_state=view_state
+    initial_view_state=view_state,
+    tooltip={"text": "Flight: {callsign}\nAltitude: {altitude}"}
 ))
 # SECTION 2: ALTITUDE GRAPH
 st.subheader("Altitude Profile (Selected Flight)")
