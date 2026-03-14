@@ -95,7 +95,7 @@ st.subheader("Live Aircraft Map – Perak")
 mapdata = df.dropna(subset=['latitude','longitude'])
 
 icon_data = {
-    "url": "https://img.icons8.com/ios-filled/100/airplane-take-off.png",
+    "url": "https://img.icons8.com/color/96/airplane-take-off.png",
     "width": 128,
     "height": 128,
     "anchorY": 128
@@ -109,8 +109,8 @@ layer = pdk.Layer(
     "IconLayer",
     data=mapdata,
     get_icon="icon",
-    get_size=4,
-    size_scale=15,
+    get_size=2,
+    size_scale=10,
     get_position="[longitude, latitude]",
     pickable=True
 )
