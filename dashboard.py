@@ -80,19 +80,42 @@ df['timestamp'] = pd.to_datetime(df['timestamp'], dayfirst=True, errors='coerce'
 df = df.dropna(subset=['timestamp', 'latitude', 'longitude', 'callsign', 'icao24'])
 
 st.title("Aircraft Monitoring Dashboard – Perak, Malaysia")
+st.title("Aircraft Monitoring Dashboard – Perak, Malaysia")
+
+st.subheader("📊 Flight Statistics")
+
+col1, col2, col3 = st.columns(3)
+
+total_flights = df['callsign'].nunique()
+total_aircraft = df['icao24'].nunique()
+max_altitude = df['altitude'].max()
+
+col1.metric("✈️ Total Flights Detected", total_flights)
+col2.metric("🛩 Unique Aircraft", total_aircraft)
+col3.metric("📈 Highest Altitude", f"{max_altitude:.0f} ft")
 
 # Sidebar Controls
-st.sidebar.header("Filters")
-shows_flights = sorted(df['callsign'].dropna().unique())
+st.sidebar.header("✈️ Flight Filters")
+
 selectedflight = st.sidebar.selectbox(
-    "Select a Callsign:",
-    options=shows_flights
+    "Select Callsign",
+    sorted(df['callsign'].unique())
 )
+
+altitude_filter = st.sidebar.slider(
+    "Minimum Altitude",
+    int(df['altitude'].min()),
+    int(df['altitude'].max()),
+    int(df['altitude'].min())
+)
+
+df = df[df['altitude'] >= altitude_filter]
+
 from datetime import datetime
 
-st.sidebar.markdown("## 🕒 Master Clock")
+st.sidebar.markdown("##Master Clock")
 
-clock = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+clock = datetime.now().strftime("%d %B %Y | %H:%M:%S")
 st.sidebar.write(clock)
 
 # SECTION 1: FLIGHT MAP
@@ -165,5 +188,30 @@ figcount = px.bar(
     title="Number of Flights Detected Per Hour"
 )
 st.plotly_chart(figcount)
+
+st.subheader("Aircraft Distribution by Callsign")
+
+flight_counts = df['callsign'].value_counts().reset_index()
+flight_counts.columns = ['callsign', 'count']
+
+fig_callsign = px.pie(
+    flight_counts,
+    names='callsign',
+    values='count',
+    title="Flight Distribution"
+)
+
+st.plotly_chart(fig_callsign)
+
+st.subheader("Altitude Distribution")
+
+fig_altitude = px.histogram(
+    df,
+    x="altitude",
+    nbins=20,
+    title="Altitude Frequency Distribution"
+)
+
+st.plotly_chart(fig_altitude)
 
 
