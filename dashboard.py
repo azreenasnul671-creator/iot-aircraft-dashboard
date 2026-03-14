@@ -95,7 +95,7 @@ st.subheader("Live Aircraft Map – Perak")
 mapdata = df.dropna(subset=['latitude','longitude'])
 
 icon_data = {
-    "url": "https://cdn-icons-png.flaticon.com/512/34/34627.png",
+    "url": "https://img.icons8.com/ios-filled/100/airplane-take-off.png",
     "width": 128,
     "height": 128,
     "anchorY": 128
