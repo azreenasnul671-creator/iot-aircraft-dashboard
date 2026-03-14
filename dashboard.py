@@ -88,6 +88,12 @@ selectedflight = st.sidebar.selectbox(
     "Select a Callsign:",
     options=shows_flights
 )
+from datetime import datetime
+
+st.sidebar.markdown("## 🕒 Master Clock")
+
+clock = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+st.sidebar.write(clock)
 
 # SECTION 1: FLIGHT MAP
 st.subheader("Live Aircraft Map – Perak")
