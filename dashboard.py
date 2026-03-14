@@ -74,7 +74,7 @@ if 'icao24' in df.columns:
     df = df[df['icao24'].astype(str) != "NODATA"].copy()
 
 # Convert timestamp to datetime
-df['timestamp'] = pd.to_datetime(df['timestamp'], errors='coerce')
+df['timestamp'] = pd.to_datetime(df['timestamp'], dayfirst=True, errors='coerce')
 
 # Drop rows with missing critical fields to avoid downstream errors
 df = df.dropna(subset=['timestamp', 'latitude', 'longitude', 'callsign', 'icao24'])
