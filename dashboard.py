@@ -46,6 +46,7 @@ def harmonize_columns(df):
 
 # Load data
 df = load_csv(DATA_FILE)
+st.write(df.head())
 
 # If loading failed or file is empty, show a helpful message and stop
 if df is None or df.empty:
@@ -55,6 +56,9 @@ if df is None or df.empty:
 
 # Harmonize column names to expected schema
 df = harmonize_columns(df)
+df['latitude'] = pd.to_numeric(df['latitude'], errors='coerce')
+df['longitude'] = pd.to_numeric(df['longitude'], errors='coerce')
+df['altitude'] = pd.to_numeric(df['altitude'], errors='coerce')
 
 # Ensure required columns exist; if not, warn and stop gracefully
 required_cols = ['timestamp', 'latitude', 'longitude', 'callsign', 'icao24', 'altitude']
@@ -88,28 +92,27 @@ selectedflight = st.sidebar.selectbox(
 # SECTION 1: FLIGHT MAP
 st.subheader("Flight Map Over Perak")
 
-# Ensure latitude/longitude exist
-mapdata = df[['latitude', 'longitude']].dropna()
+mapdata = df.dropna(subset=['latitude','longitude'])
+
+layer = pdk.Layer(
+    "ScatterplotLayer",
+    data=mapdata,
+    get_position='[longitude, latitude]',
+    get_radius=2000,
+    get_fill_color=[255, 0, 0],
+    pickable=True
+)
+
+view_state = pdk.ViewState(
+    latitude=4.0,
+    longitude=101.0,
+    zoom=7
+)
 
 st.pydeck_chart(pdk.Deck(
-    map_style='mapbox://styles/mapbox/light-v9',
-    initial_view_state=pdk.ViewState(
-        latitude=4.0,
-        longitude=101.0,
-        zoom=7,
-        pitch=0,
-    ),
-    layers=[
-        pdk.Layer(
-            'ScatterplotLayer',
-            data=df.dropna(subset=['latitude', 'longitude']),
-            get_position='[longitude, latitude]',
-            get_color='[200, 30, 30, 160]',
-            get_radius=1500,  # meters; adjust as needed
-        ),
-    ],
+    layers=[layer],
+    initial_view_state=view_state
 ))
-
 # SECTION 2: ALTITUDE GRAPH
 st.subheader("Altitude Profile (Selected Flight)")
 
